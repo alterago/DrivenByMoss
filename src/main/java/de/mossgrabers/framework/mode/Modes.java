@@ -177,7 +177,9 @@ public enum Modes
     /** A note sequencer mode. */
     NOTE_SEQUENCER,
     /** A note generator mode. */
-    GENERATOR;
+    GENERATOR,
+    /** Full-screen karaoke lyrics on a controller display. */
+    LYRICS;
 
 
     /** The name of the Track mode. */

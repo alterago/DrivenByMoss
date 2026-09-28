@@ -50,6 +50,7 @@ import de.mossgrabers.controller.ableton.push.mode.AutomationSelectionMode;
 import de.mossgrabers.controller.ableton.push.mode.FixedMode;
 import de.mossgrabers.controller.ableton.push.mode.FrameMode;
 import de.mossgrabers.controller.ableton.push.mode.GrooveMode;
+import de.mossgrabers.controller.ableton.push.mode.KaraokeMode;
 import de.mossgrabers.controller.ableton.push.mode.MarkerMode;
 import de.mossgrabers.controller.ableton.push.mode.MetronomeMode;
 import de.mossgrabers.controller.ableton.push.mode.NoteMode;
@@ -378,6 +379,7 @@ public class PushControllerSetup extends AbstractControllerSetup<PushControlSurf
         modeManager.register (Modes.AUTOMATION, new AutomationSelectionMode (surface, this.model));
         modeManager.register (Modes.TRANSPORT, new MetronomeMode (surface, this.model));
         modeManager.register (Modes.MARKERS, new MarkerMode (surface, this.model));
+        modeManager.register (Modes.LYRICS, new KaraokeMode (surface, this.model));
         modeManager.register (Modes.USER, new UserMode (surface, this.model));
 
         if (this.pushVersion == PushVersion.VERSION_1)
@@ -689,10 +691,15 @@ public class PushControllerSetup extends AbstractControllerSetup<PushControlSurf
             this.addButton (ButtonID.LOAD, "Load", new LoadCommand<> (this.model, surface), PushControlSurface.PUSH_BUTTON_FILES);
             this.addButton (ButtonID.SAVE, "Save", new SaveCommand<> (this.model, surface), PushControlSurface.PUSH_BUTTON_SAVE, () -> this.model.getProject ().isDirty ());
 
-            this.addButton (ButtonID.HELP, "Help", (event, value) -> {
+            this.addButton (ButtonID.HELP, "Karaoke Lyrics", (event, value) -> {
                 if (event == ButtonEvent.DOWN)
-                    this.model.getApplication ().showHelp ();
-            }, PushControlSurface.PUSH_BUTTON_HELP);
+                {
+                    if (modeManager.isActive (Modes.LYRICS))
+                        modeManager.restore ();
+                    else
+                        modeManager.setActive (Modes.LYRICS);
+                }
+            }, PushControlSurface.PUSH_BUTTON_HELP, () -> modeManager.isActive (Modes.LYRICS));
 
             this.addButton (ButtonID.LOCK_MODE, "Lock", NopCommand.INSTANCE, PushControlSurface.PUSH_BUTTON_LOCK, () -> this.configuration.getLockState () != LockState.OFF, PushColorManager.PUSH_BUTTON_STATE_LOCK_ON, PushColorManager.PUSH_BUTTON_STATE_LOCK_HI);
 
