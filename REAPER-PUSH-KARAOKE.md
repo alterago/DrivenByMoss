@@ -19,6 +19,12 @@ the complete native REAPER wrapper. `tools/build-reaper-karaoke-patch.sh`
 therefore compiles only the changed shared classes against the official REAPER
 JAR and overlays them onto a copy. It never replaces the installed JAR itself.
 
+The build also patches the REAPER `Restart all controllers` action to refresh
+DrivenByMoss's Java MIDI-device metadata before restarting. This is required for
+Push 3 hot-plug: CoreMIDI exposes a newly powered controller after REAPER starts,
+but a plain controller restart otherwise keeps the stale device list and can
+initialize the display without the button input/output connection.
+
 ```sh
 ./tools/build-reaper-karaoke-patch.sh \
   "$HOME/Library/Application Support/REAPER/UserPlugins/drivenbymoss-libs/DrivenByMoss4Reaper-26.6.5.jar" \
